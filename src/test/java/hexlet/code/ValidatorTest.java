@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -62,5 +63,52 @@ public class ValidatorTest {
         StringSchema schema = v.string().minLength(10).minLength(4);
 
         assertTrue(schema.isValid("Hexlet"));
+    }
+
+    @Test
+    public void testNumberSchemaWithoutRequired() {
+        Validator v = new Validator();
+        NumberSchema schema = v.number();
+
+        assertTrue(schema.isValid(5));
+        assertTrue(schema.isValid(null));
+    }
+
+    @Test
+    public void testNumberSchemaPositiveWithoutRequired() {
+        Validator v = new Validator();
+        NumberSchema schema = v.number().positive();
+
+        assertTrue(schema.isValid(null));
+    }
+
+    @Test
+    public void testNumberSchemaRequired() {
+        Validator v = new Validator();
+        NumberSchema schema = v.number().required();
+
+        assertFalse(schema.isValid(null));
+        assertTrue(schema.isValid(10));
+    }
+
+    @Test
+    public void testNumberSchemaPositive() {
+        Validator v = new Validator();
+        NumberSchema schema = v.number().positive().required();
+
+        assertFalse(schema.isValid(-10));
+        assertFalse(schema.isValid(0));
+        assertTrue(schema.isValid(10));
+    }
+
+    @Test
+    public void testNumberSchemaRange() {
+        Validator v = new Validator();
+        NumberSchema schema = v.number().required().range(5, 10);
+
+        assertTrue(schema.isValid(5));
+        assertTrue(schema.isValid(10));
+        assertFalse(schema.isValid(4));
+        assertFalse(schema.isValid(11));
     }
 }
