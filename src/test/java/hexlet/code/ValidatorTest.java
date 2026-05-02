@@ -1,8 +1,11 @@
 package hexlet.code;
 
+import hexlet.code.schemas.MapSchema;
 import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.Test;
+import java.util.HashMap;
+import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -110,5 +113,53 @@ public class ValidatorTest {
         assertTrue(schema.isValid(10));
         assertFalse(schema.isValid(4));
         assertFalse(schema.isValid(11));
+    }
+
+    @Test
+    public void testMapSchemaWithoutRequired() {
+        Validator v = new Validator();
+        MapSchema schema = v.map();
+
+        assertTrue(schema.isValid(null));
+        assertTrue(schema.isValid(new HashMap<>()));
+    }
+
+    @Test
+    public void testMapSchemaRequired() {
+        Validator v = new Validator();
+        MapSchema schema = v.map().required();
+
+        assertFalse(schema.isValid(null));
+        assertTrue(schema.isValid(new HashMap<>()));
+        assertTrue(schema.isValid(Map.of("key1", "value1")));
+    }
+
+    @Test
+    public void testMapSchemaSizeof() {
+        Validator v = new Validator();
+        MapSchema schema = v.map().sizeof(2);
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("key1", "value1");
+        assertFalse(schema.isValid(data));
+
+        data.put("key2", "value2");
+        assertTrue(schema.isValid(data));
+    }
+
+    @Test
+    public void testMapSchemaCombined() {
+        Validator v = new Validator();
+        MapSchema schema = v.map().required().sizeof(2);
+
+        assertFalse(schema.isValid(null));
+        assertFalse(schema.isValid(new HashMap<>()));
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("key1", "value1");
+        assertFalse(schema.isValid(data));
+
+        data.put("key2", "value2");
+        assertTrue(schema.isValid(data));
     }
 }
