@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.schemas.BaseSchema;
 import hexlet.code.schemas.MapSchema;
 import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
@@ -161,5 +162,105 @@ public class ValidatorTest {
 
         data.put("key2", "value2");
         assertTrue(schema.isValid(data));
+    }
+
+    @Test
+    public void testMapSchemaShapeWithStringRequired() {
+        Validator v = new Validator();
+        MapSchema schema = v.map();
+
+        Map<String, BaseSchema> schemas = new HashMap<>();
+        schemas.put("firstName", v.string().required());
+        schemas.put("lastName", v.string().required());
+
+        schema.shape(schemas);
+
+        Map<String, String> human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", "Smith");
+        assertTrue(schema.isValid(human1));
+
+        Map<String, String> human2 = new HashMap<>();
+        human2.put("firstName", "John");
+        human2.put("lastName", null);
+        assertFalse(schema.isValid(human2));
+    }
+
+    @Test
+    public void testMapSchemaShapeWithMinLength() {
+        Validator v = new Validator();
+        MapSchema schema = v.map();
+
+        Map<String, BaseSchema> schemas = new HashMap<>();
+        schemas.put("firstName", v.string().required());
+        schemas.put("lastName", v.string().required().minLength(2));
+
+        schema.shape(schemas);
+
+        Map<String, String> human1 = new HashMap<>();
+        human1.put("firstName", "Anna");
+        human1.put("lastName", "B");
+        assertFalse(schema.isValid(human1));
+
+        human1.put("lastName", "BB");
+        assertTrue(schema.isValid(human1));
+    }
+
+    @Test
+    public void testMapSchemaShapeWithNestedNumberSchema() {
+        Validator v = new Validator();
+        MapSchema schema = v.map();
+
+        Map<String, BaseSchema> schemas = new HashMap<>();
+        schemas.put("name", v.string().required());
+        schemas.put("age", v.number().positive());
+
+        schema.shape(schemas);
+
+        Map<String, Object> person1 = new HashMap<>();
+        person1.put("name", "John");
+        person1.put("age", 25);
+        assertTrue(schema.isValid(person1));
+
+        Map<String, Object> person2 = new HashMap<>();
+        person2.put("name", "John");
+        person2.put("age", -5);
+        assertFalse(schema.isValid(person2));
+    }
+
+    @Test
+    public void testMapSchemaShapeWithMissingKey() {
+        Validator v = new Validator();
+        MapSchema schema = v.map();
+
+        Map<String, BaseSchema> schemas = new HashMap<>();
+        schemas.put("firstName", v.string().required());
+        schemas.put("lastName", v.string().required());
+
+        schema.shape(schemas);
+
+        Map<String, String> human = new HashMap<>();
+        human.put("firstName", "John");
+        assertFalse(schema.isValid(human));
+    }
+
+    @Test
+    public void testMapSchemaShapeCombinedWithSizeof() {
+        Validator v = new Validator();
+        MapSchema schema = v.map().sizeof(2);
+
+        Map<String, BaseSchema> schemas = new HashMap<>();
+        schemas.put("firstName", v.string().required());
+        schemas.put("lastName", v.string().required());
+
+        schema.shape(schemas);
+
+        Map<String, String> human = new HashMap<>();
+        human.put("firstName", "John");
+        human.put("lastName", "Smith");
+        assertTrue(schema.isValid(human));
+
+        human.put("middleName", "Test");
+        assertFalse(schema.isValid(human));
     }
 }

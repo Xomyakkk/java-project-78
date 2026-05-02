@@ -1,6 +1,7 @@
 package hexlet.code.schemas;
 
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Схема для проверки объектов {@link Map}.
@@ -9,6 +10,7 @@ import java.util.Map;
  * <ul>
  *   <li>{@code required} – обязательность значения (унаследовано от {@link BaseSchema})</li>
  *   <li>{@code size} – точное число элементов в карте</li>
+ *   <li>{@code shape} – схемы для проверки значений каждого ключа</li>
  * </ul></p>
  *
  * @author hexlet
@@ -16,6 +18,9 @@ import java.util.Map;
 public class MapSchema extends BaseSchema<MapSchema> {
     /** Ожидаемый размер карты. Если {@code null}, проверка размера не выполняется. */
     private Integer size = null;
+
+    /** Схемы для проверки значений каждого ключа. */
+    private Map<String, BaseSchema> schemas = new HashMap<>();
 
     /**
      * Устанавливает ожидаемый размер карты.
@@ -25,6 +30,12 @@ public class MapSchema extends BaseSchema<MapSchema> {
      */
     public MapSchema sizeof(int mapSize) {
         this.size = mapSize;
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public MapSchema shape(Map<String, BaseSchema> shapeSchemas) {
+        this.schemas = shapeSchemas;
         return this;
     }
 
@@ -60,6 +71,17 @@ public class MapSchema extends BaseSchema<MapSchema> {
         // Если задан размер, проверяем его соответствие
         if (size != null && map.size() != size) {
             return false;
+        }
+
+        // Проверяем значения по вложенным схемам
+        for (Map.Entry<String, BaseSchema> entry : schemas.entrySet()) {
+            String key = entry.getKey();
+            BaseSchema schema = entry.getValue();
+            Object mapValue = map.get(key);
+
+            if (!schema.isValid(mapValue)) {
+                return false;
+            }
         }
 
         // Все проверки пройдены – значение валидно
