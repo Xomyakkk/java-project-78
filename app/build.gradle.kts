@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("org.sonarqube") version "7.2.2.6593"
+    id("org.sonarqube") version "7.3.0.8198"
     application
     checkstyle
     jacoco
@@ -25,7 +25,7 @@ tasks.test {
 
 sonar {
     properties {
-        property("sonar.projectKey", "Xomyakkk_java-project-71")
+        property("sonar.projectKey", "Xomyakkk_java-project-78")
         property("sonar.organization", "xomyakkk")
         property(
             "sonar.coverage.jacoco.xmlReportPaths",
