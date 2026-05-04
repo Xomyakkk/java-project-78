@@ -1,0 +1,39 @@
+package hexlet.code.schemas;
+
+public class StringSchema extends BaseSchema<StringSchema> {
+    private int minLength = 0;
+    private String substring = null;
+
+    public StringSchema minLength(int length) {
+        minLength = length;
+        return this;
+    }
+
+    public StringSchema contains(String substr) {
+        substring = substr;
+        return this;
+    }
+
+    @Override
+    public boolean isValid(Object value) {
+        if (value == null) {
+            return !required;
+        }
+
+        String str = (String) value;
+
+        if (required && str.isEmpty()) {
+            return false;
+        }
+
+        if (minLength > 0 && str.length() < minLength) {
+            return false;
+        }
+
+        if (substring != null && !str.contains(substring)) {
+            return false;
+        }
+
+        return true;
+    }
+}
