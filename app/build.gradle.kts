@@ -46,3 +46,7 @@ tasks.jacocoTestReport {
 tasks.sonar {
     dependsOn(tasks.jacocoTestReport)
 }
+
+dependencyLocking {
+    lockAllConfigurations()
+}
