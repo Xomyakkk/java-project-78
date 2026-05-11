@@ -15,7 +15,7 @@ import java.util.HashMap;
  *
  * @author hexlet
  */
-public class MapSchema extends BaseSchema {
+public class MapSchema extends BaseSchema<MapSchema> {
     private Integer size = null;
     private Map<String, BaseSchema> schemas = new HashMap<>();
 
