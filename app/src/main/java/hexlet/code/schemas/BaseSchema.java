@@ -1,9 +1,8 @@
 package hexlet.code.schemas;
 
-public abstract class BaseSchema<T extends BaseSchema<T>> {
+public abstract class BaseSchema<T> {
     protected boolean required = false;
 
-    @SuppressWarnings("unchecked")
     public T required() {
         required = true;
         return (T) this;
