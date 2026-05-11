@@ -7,22 +7,14 @@ package hexlet.code.schemas;
  *  - можно требовать только положительные числа;
  *  - задать диапазон допустимых значений (минимум и максимум).</p>
  */
-public class NumberSchema extends BaseSchema<NumberSchema> {
+public class NumberSchema extends BaseSchema {
 
-    /** Флаг, указывающий, что число должно быть строго положительным. */
-    private boolean positive = false;
+    @Override
+    public NumberSchema required() {
+        super.required();
+        return this;
+    }
 
-    /** Минимальное значение в заданном диапазоне; {@code null} означает отсутствие ограничения. */
-    private Integer minRange = null;
-
-    /** Максимальное значение в заданном диапазоне; {@code null} означает отсутствие ограничения. */
-    private Integer maxRange = null;
-
-    /**
-     * Устанавливает требование, что валидное число должно быть положительным.
-     *
-     * @return ссылка на текущий объект для поддержки метод‑чaining
-     */
     public NumberSchema positive() {
         positive = true;
         return this;

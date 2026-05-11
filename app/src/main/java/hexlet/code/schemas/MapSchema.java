@@ -15,7 +15,14 @@ import java.util.HashMap;
  *
  * @author hexlet
  */
-public class MapSchema extends BaseSchema<MapSchema> {
+public class MapSchema extends BaseSchema {
+
+    @Override
+    public MapSchema required() {
+        super.required();
+        return this;
+    }
+
     private Integer size = null;
     private Map<String, BaseSchema> schemas = new HashMap<>();
 
