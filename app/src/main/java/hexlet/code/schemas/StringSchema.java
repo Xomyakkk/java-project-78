@@ -1,6 +1,6 @@
 package hexlet.code.schemas;
 
-public class StringSchema extends BaseSchema<StringSchema> {
+public class StringSchema extends BaseSchema {
     private int minLength = 0;
     private String substring = null;
 

@@ -15,27 +15,17 @@ import java.util.HashMap;
  *
  * @author hexlet
  */
-public class MapSchema extends BaseSchema<MapSchema> {
-    /** Ожидаемый размер карты. Если {@code null}, проверка размера не выполняется. */
+public class MapSchema extends BaseSchema {
     private Integer size = null;
-
-    /** Схемы для проверки значений каждого ключа. */
     private Map<String, BaseSchema> schemas = new HashMap<>();
 
-    /**
-     * Устанавливает ожидаемый размер карты.
-     *
-     * @param mapSize ожидаемое число элементов в карте
-     * @return текущий объект схемы (для цепочки вызовов)
-     */
     public MapSchema sizeof(int mapSize) {
         this.size = mapSize;
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-    public MapSchema shape(Map<String, BaseSchema> shapeSchemas) {
-        this.schemas = shapeSchemas;
+    public MapSchema shape(Map<String, ? extends BaseSchema> shapeSchemas) {
+        this.schemas = new HashMap<>(shapeSchemas);
         return this;
     }
 
