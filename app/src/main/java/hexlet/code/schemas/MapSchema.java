@@ -17,7 +17,6 @@ import java.util.HashMap;
  */
 public class MapSchema extends BaseSchema {
 
-    @Override
     public MapSchema required() {
         super.required();
         return this;
