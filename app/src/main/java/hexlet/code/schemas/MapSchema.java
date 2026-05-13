@@ -15,22 +15,17 @@ import java.util.HashMap;
  *
  * @author hexlet
  */
-public class MapSchema extends BaseSchema<Map<?, ?>> {
-
-    public MapSchema required() {
-        super.required();
-        return this;
-    }
+public final class MapSchema extends BaseSchema<Map<?, ?>, MapSchema> {
 
     private Integer size = null;
-    private Map<String, BaseSchema<?>> schemas = new HashMap<>();
+    private Map<String, BaseSchema<?, ?>> schemas = new HashMap<>();
 
     public MapSchema sizeof(int mapSize) {
         this.size = mapSize;
         return this;
     }
 
-    public MapSchema shape(Map<String, ? extends BaseSchema<?>> shapeSchemas) {
+    public MapSchema shape(Map<String, ? extends BaseSchema<?, ?>> shapeSchemas) {
         this.schemas = new HashMap<>(shapeSchemas);
         return this;
     }
@@ -70,9 +65,9 @@ public class MapSchema extends BaseSchema<Map<?, ?>> {
         }
 
         // Проверяем значения по вложенным схемам
-        for (Map.Entry<String, BaseSchema<?>> entry : schemas.entrySet()) {
+        for (Map.Entry<String, BaseSchema<?, ?>> entry : schemas.entrySet()) {
             String key = entry.getKey();
-            BaseSchema<?> schema = entry.getValue();
+            BaseSchema<?, ?> schema = entry.getValue();
             Object mapValue = map.get(key);
 
             if (!schema.isValid(mapValue)) {
@@ -82,5 +77,10 @@ public class MapSchema extends BaseSchema<Map<?, ?>> {
 
         // Все проверки пройдены – значение валидно
         return true;
+    }
+
+    @Override
+    protected MapSchema self() {
+        return this;
     }
 }
