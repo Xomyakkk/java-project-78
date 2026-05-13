@@ -1,9 +1,9 @@
 package hexlet.code.schemas;
 
-public abstract class BaseSchema {
+public abstract class BaseSchema<T> {
     protected boolean required = false;
 
-    public BaseSchema required() {
+    public BaseSchema<T> required() {
         this.required = true;
         return this;
     }

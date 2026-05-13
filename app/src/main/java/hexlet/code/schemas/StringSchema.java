@@ -1,6 +1,8 @@
 package hexlet.code.schemas;
 
-public class StringSchema extends BaseSchema {
+public class StringSchema extends BaseSchema<String> {
+    private int minLength;
+    private String substring;
 
     public StringSchema required() {
         super.required();

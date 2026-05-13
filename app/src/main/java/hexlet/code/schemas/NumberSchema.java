@@ -7,7 +7,10 @@ package hexlet.code.schemas;
  *  - можно требовать только положительные числа;
  *  - задать диапазон допустимых значений (минимум и максимум).</p>
  */
-public class NumberSchema extends BaseSchema {
+public class NumberSchema extends BaseSchema<Number> {
+    private boolean positive;
+    private Integer minRange;
+    private Integer maxRange;
 
     public NumberSchema required() {
         super.required();
