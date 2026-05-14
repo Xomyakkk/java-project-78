@@ -12,6 +12,12 @@ public final class NumberSchema extends BaseSchema<Number> {
     private Integer minRange;
     private Integer maxRange;
 
+    @Override
+    public NumberSchema required() {
+        super.required();
+        return this;
+    }
+
     public NumberSchema positive() {
         positive = true;
         return this;
