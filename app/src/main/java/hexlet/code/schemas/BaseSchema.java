@@ -1,46 +1,27 @@
 package hexlet.code.schemas;
 
-/**
- * Абстрактный базовый класс для схемы валидации.
- *
- * <p>Класс предназначен для создания различных схем, которые могут проверять
- * значения на соответствие определённым требованиям (например,
- * обязательность, диапазон значений и т.п.). Конкретные реализации
- * наследуют данный класс и переопределяют абстрактный метод {@link #isValid(Object)},
- * чтобы реализовать свою собственную логику проверки.</p>
- *
- * @param <T> тип данных, который будет проверяться в конкретной схеме.
- */
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Predicate;
+
 public abstract class BaseSchema<T> {
-    /**
-     * Флаг, указывающий обязательность значения для данной схемы.
-     *
-     * <p>Если {@code true}, то при вызове метода {@link #isValid(Object)}
-     * значение не должно быть {@code null}. По умолчанию флаг равен {@code false},
-     * что означает, что валидация допускает {@code null} значения.</p>
-     */
+    protected Map<String, Predicate<T>> checks = new HashMap<>();
     protected boolean required = false;
 
-    /**
-     * Помечает текущую схему как требующую ненулевое значение.
-     * @return текущий экземпляр схемы, позволяя использовать цепочку вызовов методов (fluent API)
-     */
+    protected final void addCheck(String name, Predicate<T> validate) {
+        checks.put(name, validate);
+    }
+
     public BaseSchema<T> required() {
-        this.required = true;
+        required = true;
         return this;
     }
 
-    /**
-     * Проверяет, соответствует ли указанное значение требованиям схемы.
-     *
-     * <p>Метод должен быть реализован в конкретных наследниках,
-     * где будет описана логика проверки (например, диапазон чисел,
-     * формат строки и т.п.). При этом учитывается флаг {@link #required},
-     * если он установлен.</p>
-     *
-     * @param value значение для проверки
-     * @return {@code true} если значение валидно согласно схеме,
-     *         {@code false} иначе
-     */
-    public abstract boolean isValid(Object value);
+    public final boolean isValid(T value) {
+        if (value == null) {
+            return !required;
+        }
+
+        return checks.values().stream().allMatch(check -> check.test(value));
+    }
 }
